@@ -5,3 +5,5 @@ SignalBond is a reusable GenLayer Intelligent Contract primitive for escrowed pu
 An eligible third party can open one bounded challenge round with the exact required bond and optional hash-bound counterevidence. While challenged, the claim is never actionable. Re-review can slash the bond to the configured sink when verification remains confirmed, or refund it when the result is not verified. If review is unavailable, a public timeout route refunds the bond. All payouts zero internal accounting before transfer and settlement is one-time.
 
 The contract is deliberately frontend- and oracle-independent. External artifacts must be HTTPS, bounded, UTF-8 text and content-addressed by SHA-256(raw bytes). Direct Mode tests cover malformed inputs, integrity failures, consensus disagreement, challenge timing, replay protection, and bond accounting.
+
+Version 0.2.0 stores each signal's challenge window, expires pending reviews after 48 hours, and refunds both principal and bond on challenge timeout. There is no claimed live deployment yet; deployment evidence will be added only after finalized transactions and byte-for-byte source parity are verified.
