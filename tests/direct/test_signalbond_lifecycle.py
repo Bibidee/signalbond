@@ -29,6 +29,7 @@ def review_mock(direct_vm, result=None):
 
 def open_challenge(direct_vm, c, direct_alice):
     direct_vm.mock_web(COUNTER_URL, {"status": 200, "body": COUNTER})
+    direct_vm.mock_llm("COUNTEREVIDENCE_ADMISSION", json.dumps({"relevant_to_claim":"yes","material_to_review":"yes","weakens_or_contradicts":"yes"}))
     direct_vm.value = BOND
     with direct_vm.prank(direct_alice): c.challenge_claim("s-1", COUNTER_URL, COUNTER_HASH, "counter")
     direct_vm.value = 0
@@ -129,6 +130,7 @@ def test_counterevidence_url_is_in_semantic_prompt(direct_vm, direct_deploy, dir
     counter = b"Counterevidence is stable.\n"
     counter_hash = "0x" + hashlib.sha256(counter).hexdigest()
     direct_vm.mock_web(counter_url, {"status": 200, "body": counter})
+    direct_vm.mock_llm("COUNTEREVIDENCE_ADMISSION", json.dumps({"relevant_to_claim":"yes","material_to_review":"yes","weakens_or_contradicts":"yes"}))
     direct_vm.value = 10**18
     with direct_vm.prank(direct_alice): c.challenge_claim("s-1", counter_url, counter_hash, "Counter summary")
     direct_vm.value = 0

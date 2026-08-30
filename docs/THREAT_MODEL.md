@@ -1,0 +1,3 @@
+# Threat model
+
+SignalBond treats submitters, beneficiaries, challengers, web content, and model outputs as adversarial. SHA-256 commitments prevent mutable evidence substitution; canonical prompts and strict schemas contain prompt injection and malformed output. Validator disagreement fails closed. Challenge bonds and escrow are isolated per signal and cleared before transfer, preventing replay and cross-claim leakage. Interested-party checks are address-level only and do not defeat Sybil identities. DNS, redirects, transfer execution, and validator availability remain GenVM/platform trust boundaries.
