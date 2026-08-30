@@ -1,0 +1,7 @@
+{
+  "name": "signalbond-genlayer",
+  "private": true,
+  "type": "module",
+  "scripts": {"deploy:studionet": "node scripts/deploy_studionet.mjs"},
+  "dependencies": {"ethers": "6.15.0", "genlayer-js": "1.1.8", "viem": "2.37.2"}
+}
