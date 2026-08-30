@@ -27,6 +27,14 @@ def test_malformed_admission_fails_closed(direct_deploy):
         assert m.admission_decision(bad) == m.REJECT
         assert not m.admission_equivalent(base, bad)
 
+def test_malformed_outputs_never_establish_consensus(direct_deploy):
+    m = mod(direct_deploy)
+    reject = a("yes", "yes", "no")
+    malformed = {"garbage": True}
+    assert not m.admission_equivalent(reject, malformed)
+    assert not m.admission_equivalent(malformed, reject)
+    assert not m.admission_equivalent(malformed, {"garbage": False})
+
 def test_policy_hash_matches_canonical_policy(direct_deploy):
     m = mod(direct_deploy)
     assert m.POLICY_HASH == "0x" + m.hashlib.sha256(m.POLICY_CANONICAL.encode("utf-8")).hexdigest()

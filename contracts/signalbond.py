@@ -204,6 +204,8 @@ def valid_admission(value) -> bool:
     return isinstance(value, dict) and set(value.keys()) == {"relevant_to_claim", "material_to_review", "weakens_or_contradicts"} and value.get("relevant_to_claim") in ("yes", "no") and value.get("material_to_review") in ("yes", "no") and value.get("weakens_or_contradicts") in ("yes", "no", "unclear")
 
 def admission_equivalent(left, right) -> bool:
+    if not valid_admission(left) or not valid_admission(right):
+        return False
     return admission_decision(left) == admission_decision(right)
 
 def admission_decision(value: dict) -> str:
