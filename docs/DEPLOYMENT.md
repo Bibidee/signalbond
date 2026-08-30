@@ -2,11 +2,11 @@
 
 ## CURRENT RELEASE DEPLOYMENT
 
-SignalBond v0.3 admission-equivalence release is deployed at `0xBCC15C4bb5d2A893e1E30143322b732aFC364B50` ([Explorer](https://explorer-studio.genlayer.com/address/0xBCC15C4bb5d2A893e1E30143322b732aFC364B50)). Deployment transaction: `0x43efc011eb72ad7b8f86f69c39e68a2ea1b2ca419550b72ee0ecd11927142acc` ([Explorer](https://explorer-studio.genlayer.com/tx/0x43efc011eb72ad7b8f86f69c39e68a2ea1b2ca419550b72ee0ecd11927142acc)). It finalized with GenVM SUCCESS. Source commit `46b7a58`; local/deployed bytes 26,868; SHA-256 `f54b46ed01fe85bdaea40b372eb61855f08ef4c0c284eca050766d7eaaf1dc6a`; parity exact.
+SignalBond v0.3 admission-validity release is deployed at `0x96C19E1D08Acb1Ba3275C82e3783Cd1060Af88Bf` ([Explorer](https://explorer-studio.genlayer.com/address/0x96C19E1D08Acb1Ba3275C82e3783Cd1060Af88Bf)). Deployment transaction: `0x188c2680480ed692861d9183c3d642b010429ebd7d5f0758ba2bc7491a46f72b` ([Explorer](https://explorer-studio.genlayer.com/tx/0x188c2680480ed692861d9183c3d642b010429ebd7d5f0758ba2bc7491a46f72b)). Finalized with GenVM SUCCESS. Source commit `bceb3a3`; local/deployed bytes 26,953; SHA-256 `54f20e9880474796ee211df1e39068fbbeb2f2e34897d4375f27b51efd1f8aeb`; parity exact.
 
-SignalBond v0.3 admission-equivalence release is deployed at `0xBCC15C4bb5d2A893e1E30143322b732aFC364B50` ([Explorer](https://explorer-studio.genlayer.com/address/0xBCC15C4bb5d2A893e1E30143322b732aFC364B50)). Deployment transaction: `0x43efc011eb72ad7b8f86f69c39e68a2ea1b2ca419550b72ee0ecd11927142acc` ([Explorer](https://explorer-studio.genlayer.com/tx/0x43efc011eb72ad7b8f86f69c39e68a2ea1b2ca419550b72ee0ecd11927142acc)). It finalized with GenVM SUCCESS. Source commit: `46b7a58`; local/deployed bytes: 26,868; SHA-256: `f54b46ed01fe85bdaea40b372eb61855f08ef4c0c284eca050766d7eaaf1dc6a`; parity: exact.
+The prior `0xBCC15C4...` deployment is historical.
 
-Direct Mode currently reports 78 passed. Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from the repository root. Preflight enforces AST parsing, GenVM lint, contract validation/schema, and the complete Direct Mode suite.
+Direct Mode currently reports 79 passed. Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from the repository root. Preflight enforces AST parsing, GenVM lint, contract validation/schema, and the complete Direct Mode suite.
 
 ## HISTORICAL DEPLOYMENTS
 
