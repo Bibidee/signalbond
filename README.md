@@ -14,9 +14,9 @@ The working source is version 0.3.0. It stores each signal's challenge window, e
 
 ## Deployment evidence
 
-Current source deployment: [0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc](https://explorer-studio.genlayer.com/address/0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc), transaction [0xc56ebfe18d89a7b54be8b9129892e997e40066a8a0c2f53162af9bf30215dc6d](https://explorer-studio.genlayer.com/tx/0xc56ebfe18d89a7b54be8b9129892e997e40066a8a0c2f53162af9bf30215dc6d). It finalized with GenVM `SUCCESS`; deployed and local source are byte-identical at 20,382 bytes, with SHA-256 `291ac6438a3dea71778438a4410bdb4942631d660ccada079f69c45088490e0a`.
+Current v0.3.0 source deployment: [0x0cfAE5Daed6cCF49ECfB8F1b7ebF4cbBf3a569E7](https://explorer-studio.genlayer.com/address/0x0cfAE5Daed6cCF49ECfB8F1b7ebF4cbBf3a569E7), transaction [0xf1876f5a152d464bd1792274519bd9fe99bf34b65f8bc63b3f18ab7454e1763f](https://explorer-studio.genlayer.com/tx/0xf1876f5a152d464bd1792274519bd9fe99bf34b65f8bc63b3f18ab7454e1763f). It finalized with GenVM `SUCCESS`; deployed and local source are byte-identical at 22,217 bytes, with SHA-256 `f30202258c3c5354e9a5428b958e1397d72c978c3cdf59494dd277e2cac0e6d7`.
 
-The previously deployed v0.2.0 source remains historical at [0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C](https://explorer-studio.genlayer.com/address/0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C). The v0.3.0 source has not been deployed.
+The previously deployed v0.2.0 sources remain historical at [0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C](https://explorer-studio.genlayer.com/address/0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C) and [0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc](https://explorer-studio.genlayer.com/address/0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc).
 
 Historical hardened deployment: [0x8Bdf378985B6C11c1D39Fc7306aea568268b5851](https://explorer-studio.genlayer.com/address/0x8Bdf378985B6C11c1D39Fc7306aea568268b5851), transaction [0x314a60e8c53e40d24b92df431114cbdc9af7ae9bd9185b9b855ed89deebf5c3b](https://explorer-studio.genlayer.com/tx/0x314a60e8c53e40d24b92df431114cbdc9af7ae9bd9185b9b855ed89deebf5c3b), source SHA-256 `583df13cb342ceefbbf90c63108d185d3c261f38e67fcaa76549ef21b539fdb5`.
 

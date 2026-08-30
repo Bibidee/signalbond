@@ -2,9 +2,11 @@
 
 ## CURRENT RELEASE DEPLOYMENT
 
-SignalBond v0.2.0 is deployed on StudioNet at `0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc` ([Explorer](https://explorer-studio.genlayer.com/address/0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc)). Deployment transaction: `0xc56ebfe18d89a7b54be8b9129892e997e40066a8a0c2f53162af9bf30215dc6d` ([Explorer](https://explorer-studio.genlayer.com/tx/0xc56ebfe18d89a7b54be8b9129892e997e40066a8a0c2f53162af9bf30215dc6d)). It finalized with GenVM `SUCCESS`. The current v0.3.0 source is not deployed; a fresh deployment is required after release validation.
+SignalBond v0.3.0 is deployed on StudioNet at `0x0cfAE5Daed6cCF49ECfB8F1b7ebF4cbBf3a569E7` ([Explorer](https://explorer-studio.genlayer.com/address/0x0cfAE5Daed6cCF49ECfB8F1b7ebF4cbBf3a569E7)). Deployment transaction: `0xf1876f5a152d464bd1792274519bd9fe99bf34b65f8bc63b3f18ab7454e1763f` ([Explorer](https://explorer-studio.genlayer.com/tx/0xf1876f5a152d464bd1792274519bd9fe99bf34b65f8bc63b3f18ab7454e1763f)). It finalized with GenVM `SUCCESS`.
 
-The deployed source corresponds to contract-source commit `c82900f` and SHA-256 `291ac6438a3dea71778438a4410bdb4942631d660ccada079f69c45088490e0a`. `gen_getContractCode` returned 20,382 bytes; local and deployed bytes match exactly.
+The prior v0.2.0 deployment remains historical at `0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc`.
+
+The v0.3.0 deployed source corresponds to contract-source commit `d7e50e2` and SHA-256 `f30202258c3c5354e9a5428b958e1397d72c978c3cdf59494dd277e2cac0e6d7`. `gen_getContractCode` returned 22,217 bytes; local and deployed bytes match exactly.
 
 Direct Mode currently reports 74 passed. Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from the repository root. Preflight enforces AST parsing, GenVM lint, contract validation/schema, and the complete Direct Mode suite.
 
