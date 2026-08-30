@@ -49,7 +49,7 @@ def test_initial_verified_review_and_settlement_boundary(direct_vm, direct_deplo
 @pytest.mark.parametrize("field,value", [("claim_supported","no"),("contradiction","yes"),("source_quality","no")])
 def test_each_disputed_dimension_refunds_submitter_path(direct_vm, direct_deploy, field, value):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); r={"claim_supported":"yes","contradiction":"no","source_quality":"yes","confidence":90,"rationale":"unsafe"}; r[field]=value
-    review_mock(direct_vm, r); c.review_claim("s-1"); assert c.get_signal("s-1")["verdict"] == "disputed"; c.settle_claim("s-1"); assert c.get_signal("s-1")["status"] == "settled"
+    review_mock(direct_vm, r); c.review_claim("s-1"); assert c.get_signal("s-1")["verdict"] == "disputed"; c.settle_claim("s-1"); s=c.get_signal("s-1"); assert s["status"] == "settled" and s["escrow_held"] == "0" and s["challenge_bond_held"] == "0"
 
 def test_inconclusive_never_approves(direct_vm, direct_deploy):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm, {"claim_supported":"unclear","contradiction":"no","source_quality":"yes","confidence":74,"rationale":"unclear"}); c.review_claim("s-1")
@@ -59,6 +59,23 @@ def test_pending_expiry_refunds_and_blocks_review(direct_vm, direct_deploy):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); warp_to(direct_vm, "2026-09-01T00:00:00Z")
     c.expire_pending("s-1"); s=c.get_signal("s-1"); assert s["status"] == "cancelled" and s["escrow_held"] == "0"
     with direct_vm.expect_revert("not reviewable"): c.review_claim("s-1")
+
+@pytest.mark.parametrize("when,allowed", [("2026-08-31T23:59:59Z", False), ("2026-09-01T00:00:00Z", True), ("2026-09-01T00:00:01Z", True)])
+def test_pending_expiry_boundaries(direct_vm, direct_deploy, when, allowed):
+    c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); warp_to(direct_vm, when)
+    if allowed:
+        c.expire_pending("s-1"); assert c.get_signal("s-1")["status"] == "cancelled"
+    else:
+        with direct_vm.expect_revert("Review deadline remains open"): c.expire_pending("s-1")
+
+def test_challenge_timeout_boundary(direct_vm, direct_deploy, direct_alice):
+    c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
+    direct_vm.value=10**18
+    with direct_vm.prank(direct_alice): c.challenge_claim("s-1")
+    direct_vm.value=0; warp_to(direct_vm, "2026-08-30T01:59:59Z")
+    with direct_vm.expect_revert("deadline remains open"): c.settle_claim("s-1")
+    warp_to(direct_vm, "2026-08-30T02:00:00Z"); c.settle_claim("s-1")
+    s=c.get_signal("s-1"); assert s["settlement"] == "timeout_refunded" and s["escrow_held"] == "0" and s["challenge_bond_held"] == "0"
 
 def test_eligible_challenge_and_timeout_refunds_both_balances(direct_vm, direct_deploy, direct_alice):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
