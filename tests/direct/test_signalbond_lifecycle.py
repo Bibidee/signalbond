@@ -134,7 +134,7 @@ def test_counterevidence_url_is_in_semantic_prompt(direct_vm, direct_deploy, dir
     direct_vm.value = 0
     direct_vm.clear_mocks()
     direct_vm.mock_web(EVIDENCE_URL, {"status": 200, "body": EVIDENCE})
-    direct_vm.mock_llm("<COUNTEREVIDENCE_URL>\n" + counter_url, json.dumps({"claim_supported":"no","contradiction":"yes","source_quality":"yes","confidence":90,"rationale":"counter"}))
+    direct_vm.mock_llm(counter_url, json.dumps({"claim_supported":"no","contradiction":"yes","source_quality":"yes","confidence":90,"rationale":"counter"}))
     warp_to(direct_vm, "2026-08-30T01:30:00Z")
     c.review_claim("s-1")
     assert c.get_signal("s-1")["verdict"] == "disputed"
