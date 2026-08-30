@@ -14,5 +14,7 @@ const client = createClient({ chain: studionet, endpoint: process.env.SIGNALBOND
 const body = await (await fetch("https://raw.githubusercontent.com/Bibidee/signalbond/790c080684697f2226ae5422d89fa19bb4766161/README.md")).arrayBuffer();
 const hash = "0x" + crypto.createHash("sha256").update(Buffer.from(body)).digest("hex");
 const url = "https://raw.githubusercontent.com/Bibidee/signalbond/790c080684697f2226ae5422d89fa19bb4766161/README.md";
-const tx = await client.writeContract({ address, functionName: "submit_claim", args: ["live-safe-001", wallet.address, "SignalBond is a reusable claim-verification primitive", url, hash, 3600], value: 1000000000000000000n, consensusMaxRotations: 5 });
+const id = process.env.SIGNALBOND_ID || "live-safe-001";
+const statement = process.env.SIGNALBOND_STATEMENT || "SignalBond is a reusable claim-verification primitive";
+const tx = await client.writeContract({ address, functionName: "submit_claim", args: [id, wallet.address, statement, url, hash, 3600], value: 1000000000000000000n, consensusMaxRotations: 5 });
 console.log(JSON.stringify({ wallet: wallet.address, submit: tx, evidence_url: url, evidence_hash: hash }, null, 2));
