@@ -8,6 +8,8 @@ An eligible third party can open one bounded challenge round with the exact requ
 
 The contract is deliberately frontend- and oracle-independent. External artifacts must be HTTPS, bounded, UTF-8 text and content-addressed by SHA-256(raw bytes). Direct Mode: 32 passed, covering state transitions, verdict/equivalence logic, evidence integrity, malformed semantic outputs, challenge admission, timing boundaries, replay protection, bond accounting, and URL hardening. StudioNet deployments exercise multi-validator consensus; Direct Mode does not claim forced validator disagreement.
 
+GitHub Actions release gate: [run 33321649926](https://github.com/Bibidee/signalbond/actions/runs/33321649926) completed successfully using the official GenLayer testing-suite fix pinned at commit `8f8e802350140239be2b37590ed7a68253634ec5`.
+
 Version 0.2.0 stores each signal's challenge window, expires pending reviews after 48 hours, and refunds both principal and bond on challenge timeout.
 
 ## Deployment evidence
