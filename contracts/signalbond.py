@@ -22,7 +22,12 @@ PENDING_REVIEW_PERIOD = 2 * 24 * 60 * 60
 MAX_TEXT, MAX_URL, MAX_ID, MAX_ARTIFACT_BYTES = 400, 512, 96, 12000
 MIN_CONFIDENCE = 75
 POLICY_VERSION = "evidence_support_v1"
-POLICY_HASH = "0x" + hashlib.sha256(b"evidence_support_v1:direct support; reliable contradiction; provenance and context; unclear on missing, conflicting, ambiguous, temporal, or unverifiable evidence").hexdigest()
+POLICY_CANONICAL = ("version=evidence_support_v1;claim_supported=directly establishes proposition with adequate context;"
+                    "contradiction=reliable evidence incompatible with proposition;source_quality=identifiable provenance, context, and completeness;"
+                    "unclear=conflicting, missing, ambiguous, temporal, or unverifiable evidence;min_confidence=75;"
+                    "challenge_admission=relevant_yes_and_material_yes_and_weakens_not_no")
+POLICY_HASH = "0x" + hashlib.sha256(POLICY_CANONICAL.encode("utf-8")).hexdigest()
+ADMIT, REJECT = "admit", "reject"
 DEFAULT_CHALLENGE_BPS = 100
 MAX_CHALLENGE_BPS = 1000
 
@@ -199,7 +204,11 @@ def valid_admission(value) -> bool:
     return isinstance(value, dict) and set(value.keys()) == {"relevant_to_claim", "material_to_review", "weakens_or_contradicts"} and value.get("relevant_to_claim") in ("yes", "no") and value.get("material_to_review") in ("yes", "no") and value.get("weakens_or_contradicts") in ("yes", "no", "unclear")
 
 def admission_equivalent(left, right) -> bool:
-    return valid_admission(left) and valid_admission(right) and left == right
+    return admission_decision(left) == admission_decision(right)
+
+def admission_decision(value: dict) -> str:
+    if not valid_admission(value): return REJECT
+    return ADMIT if value["relevant_to_claim"] == "yes" and value["material_to_review"] == "yes" and value["weakens_or_contradicts"] != "no" else REJECT
 
 
 def canonical_analysis(value: dict) -> dict:
@@ -385,7 +394,7 @@ class SignalBond(gl.Contract):
             if not isinstance(admission, dict) or admission.get("kind") != "admission" or not valid_admission(admission.get("result")):
                 raise gl.vm.UserError(f"{RETRYABLE} Challenge admission unavailable")
             decision = admission["result"]
-            if decision["relevant_to_claim"] != "yes" or decision["material_to_review"] != "yes" or decision["weakens_or_contradicts"] == "no":
+            if admission_decision(decision) != ADMIT:
                 raise gl.vm.UserError(f"{EXPECTED} Counterevidence is not materially relevant")
         signal.status, signal.verdict, signal.challenger = CHALLENGED, "", gl.message.sender_address
         signal.challenge_bond_held = gl.message.value; signal.challenge_open_until = u256(int(signal.reviewed_at) + int(signal.challenge_window)); signal.challenge_review_deadline = u256(int(signal.reviewed_at) + 2 * int(signal.challenge_window)); signal.challenge_artifact_url, signal.challenge_artifact_hash, signal.challenge_artifact_text, signal.challenge_summary = artifact_url, artifact_hash, artifact_text, summary
@@ -425,4 +434,4 @@ class SignalBond(gl.Contract):
 
     @gl.public.view
     def get_policy(self) -> dict:
-        return {"version": POLICY_VERSION, "hash": POLICY_HASH, "min_confidence": str(MIN_CONFIDENCE), "claim_supported": "evidence directly establishes the proposition with adequate context", "contradiction": "reliable evidence is incompatible with the proposition", "source_quality": "identifiable provenance, context, and internal completeness are sufficient", "unclear": "conflicting, missing, ambiguous, temporally mismatched, or unverifiable evidence"}
+        return {"version": POLICY_VERSION, "hash": POLICY_HASH, "canonical_policy": POLICY_CANONICAL, "min_confidence": str(MIN_CONFIDENCE), "claim_supported": "evidence directly establishes the proposition with adequate context", "contradiction": "reliable evidence is incompatible with the proposition", "source_quality": "identifiable provenance, context, and internal completeness are sufficient", "unclear": "conflicting, missing, ambiguous, temporally mismatched, or unverifiable evidence"}
