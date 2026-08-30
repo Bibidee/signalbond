@@ -2,6 +2,8 @@
 
 ## CURRENT RELEASE DEPLOYMENT
 
+Final hardened source deployment (v0.3.0): `0xBFd8a850Eb490c9D4aA500b2610BF6ca122d6320` ([Explorer](https://explorer-studio.genlayer.com/address/0xBFd8a850Eb490c9D4aA500b2610BF6ca122d6320)); deployment transaction `0xca7d74bbf9ebc4d50895fc885e8e920d86f52fabbe0598bacfb561305f15fdd2` ([Explorer](https://explorer-studio.genlayer.com/tx/0xca7d74bbf9ebc4d50895fc885e8e920d86f52fabbe0598bacfb561305f15fdd2)). Receipt is FINALIZED with GenVM SUCCESS. Source commit `7882f2f`; local/deployed bytes: 26,303; SHA-256: `c988c078449fcf47c33f358491891df6f9f86b955b853b3ee077787888564b50`; equality: true.
+
 SignalBond v0.3.0 is deployed on StudioNet at `0x0cfAE5Daed6cCF49ECfB8F1b7ebF4cbBf3a569E7` ([Explorer](https://explorer-studio.genlayer.com/address/0x0cfAE5Daed6cCF49ECfB8F1b7ebF4cbBf3a569E7)). Deployment transaction: `0xf1876f5a152d464bd1792274519bd9fe99bf34b65f8bc63b3f18ab7454e1763f` ([Explorer](https://explorer-studio.genlayer.com/tx/0xf1876f5a152d464bd1792274519bd9fe99bf34b65f8bc63b3f18ab7454e1763f)). It finalized with GenVM `SUCCESS`.
 
 The prior v0.2.0 deployment remains historical at `0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc`.
