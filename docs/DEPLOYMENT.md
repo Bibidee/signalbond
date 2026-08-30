@@ -2,17 +2,15 @@
 
 ## CURRENT RELEASE DEPLOYMENT
 
-Final hardened source deployment (v0.3.0): `0xBFd8a850Eb490c9D4aA500b2610BF6ca122d6320` ([Explorer](https://explorer-studio.genlayer.com/address/0xBFd8a850Eb490c9D4aA500b2610BF6ca122d6320)); deployment transaction `0xca7d74bbf9ebc4d50895fc885e8e920d86f52fabbe0598bacfb561305f15fdd2` ([Explorer](https://explorer-studio.genlayer.com/tx/0xca7d74bbf9ebc4d50895fc885e8e920d86f52fabbe0598bacfb561305f15fdd2)). Receipt is FINALIZED with GenVM SUCCESS. Source commit `7882f2f`; local/deployed bytes: 26,303; SHA-256: `c988c078449fcf47c33f358491891df6f9f86b955b853b3ee077787888564b50`; equality: true.
+SignalBond v0.3 admission-equivalence release is deployed at `0xBCC15C4bb5d2A893e1E30143322b732aFC364B50` ([Explorer](https://explorer-studio.genlayer.com/address/0xBCC15C4bb5d2A893e1E30143322b732aFC364B50)). Deployment transaction: `0x43efc011eb72ad7b8f86f69c39e68a2ea1b2ca419550b72ee0ecd11927142acc` ([Explorer](https://explorer-studio.genlayer.com/tx/0x43efc011eb72ad7b8f86f69c39e68a2ea1b2ca419550b72ee0ecd11927142acc)). It finalized with GenVM SUCCESS. Source commit `46b7a58`; local/deployed bytes 26,868; SHA-256 `f54b46ed01fe85bdaea40b372eb61855f08ef4c0c284eca050766d7eaaf1dc6a`; parity exact.
 
-SignalBond v0.3.0 is deployed on StudioNet at `0x0cfAE5Daed6cCF49ECfB8F1b7ebF4cbBf3a569E7` ([Explorer](https://explorer-studio.genlayer.com/address/0x0cfAE5Daed6cCF49ECfB8F1b7ebF4cbBf3a569E7)). Deployment transaction: `0xf1876f5a152d464bd1792274519bd9fe99bf34b65f8bc63b3f18ab7454e1763f` ([Explorer](https://explorer-studio.genlayer.com/tx/0xf1876f5a152d464bd1792274519bd9fe99bf34b65f8bc63b3f18ab7454e1763f)). It finalized with GenVM `SUCCESS`.
+SignalBond v0.3 admission-equivalence release is deployed at `0xBCC15C4bb5d2A893e1E30143322b732aFC364B50` ([Explorer](https://explorer-studio.genlayer.com/address/0xBCC15C4bb5d2A893e1E30143322b732aFC364B50)). Deployment transaction: `0x43efc011eb72ad7b8f86f69c39e68a2ea1b2ca419550b72ee0ecd11927142acc` ([Explorer](https://explorer-studio.genlayer.com/tx/0x43efc011eb72ad7b8f86f69c39e68a2ea1b2ca419550b72ee0ecd11927142acc)). It finalized with GenVM SUCCESS. Source commit: `46b7a58`; local/deployed bytes: 26,868; SHA-256: `f54b46ed01fe85bdaea40b372eb61855f08ef4c0c284eca050766d7eaaf1dc6a`; parity: exact.
 
-The prior v0.2.0 deployment remains historical at `0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc`.
-
-The v0.3.0 deployed source corresponds to contract-source commit `d7e50e2` and SHA-256 `f30202258c3c5354e9a5428b958e1397d72c978c3cdf59494dd277e2cac0e6d7`. `gen_getContractCode` returned 22,217 bytes; local and deployed bytes match exactly.
-
-Direct Mode currently reports 74 passed. Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from the repository root. Preflight enforces AST parsing, GenVM lint, contract validation/schema, and the complete Direct Mode suite.
+Direct Mode currently reports 78 passed. Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from the repository root. Preflight enforces AST parsing, GenVM lint, contract validation/schema, and the complete Direct Mode suite.
 
 ## HISTORICAL DEPLOYMENTS
+
+The previous v0.3 deployment `0xBFd8a850Eb490c9D4aA500b2610BF6ca122d6320` and transaction `0xca7d74bbf9ebc4d50895fc885e8e920d86f52fabbe0598bacfb561305f15fdd2` remain historical (source commit `7882f2f`, SHA-256 `c988c078449fcf47c33f358491891df6f9f86b955b853b3ee077787888564b50`). The earlier v0.3 deployment `0x0cfAE5Daed6cCF49ECfB8F1b7ebF4cbBf3a569E7` and transaction `0xf1876f5a152d464bd1792274519bd9fe99bf34b65f8bc63b3f18ab7454e1763f` are also historical. The v0.2 deployment is `0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc`; earlier records include `0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C` and `0x8Bdf378985B6C11c1D39Fc7306aea568268b5851`.
 
 The earlier hardened deployment `0x8Bdf378985B6C11c1D39Fc7306aea568268b5851` and its transaction `0x314a60e8c53e40d24b92df431114cbdc9af7ae9bd9185b9b855ed89deebf5c3b` remain historical. Its source hash was `583df13cb342ceefbbf90c63108d185d3c261f38e67fcaa76549ef21b539fdb5`.
 
