@@ -1,15 +1,21 @@
 # Deployment
 
-Current source deployment: `0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc`; transaction `0xc56ebfe18d89a7b54be8b9129892e997e40066a8a0c2f53162af9bf30215dc6d`. It finalized with GenVM `SUCCESS`. Local and deployed source are byte-identical (20,382 bytes), with SHA-256 `291ac6438a3dea71778438a4410bdb4942631d660ccada079f69c45088490e0a`.
+## CURRENT RELEASE DEPLOYMENT
 
-Fresh hardened challenge transaction `0x0da20e75c0410145cb87bfbe0e9b273741b368590c5b8d437e746e455abfda94` finalized; challenger `0x53C89d18C2951C4df149d08217f5b5E2Cf1A51C0`; signal is `challenged`; opening deadline `1788095847`; review deadline `1788099447`.
+SignalBond v0.2.0 is deployed on StudioNet at `0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc` ([Explorer](https://explorer-studio.genlayer.com/address/0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc)). Deployment transaction: `0xc56ebfe18d89a7b54be8b9129892e997e40066a8a0c2f53162af9bf30215dc6d` ([Explorer](https://explorer-studio.genlayer.com/tx/0xc56ebfe18d89a7b54be8b9129892e997e40066a8a0c2f53162af9bf30215dc6d)). It finalized with GenVM `SUCCESS`.
 
-Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from this directory. The deployable source is `contracts/signalbond.py`; record finalized deployment, commit, and SHA-256 of its raw bytes, then retrieve Explorer source and compare byte-for-byte. Direct Mode currently reports 29 passed. The hardened deployment below is finalized; post-deployment working-tree changes require a new deployment before replacing it as active.
+The deployed source corresponds to contract-source commit `c82900f` and SHA-256 `291ac6438a3dea71778438a4410bdb4942631d660ccada079f69c45088490e0a`. `gen_getContractCode` returned 20,382 bytes; local and deployed bytes match exactly.
 
-Current finalized deployment: `0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C`; deployment transaction `0x1fd01b31d6a0a2bebb92c29f13f4a888ef62adfee7546a7f0e12c91dc9d2a6e6`; source commit `790c080684697f2226ae5422d89fa19bb4766161`; local source SHA-256 `6a027aaa3c17511d76b4920bc952681e52d784b04c2c2d348b36481a38cc75cd`. The receipt finalized with GenVM `SUCCESS`.
+Direct Mode currently reports 32 passed. Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from the repository root. Preflight enforces AST parsing, GenVM lint, contract validation/schema, and the complete Direct Mode suite.
 
-Current hardened deployment: `0x8Bdf378985B6C11c1D39Fc7306aea568268b5851`; deployment transaction `0x314a60e8c53e40d24b92df431114cbdc9af7ae9bd9185b9b855ed89deebf5c3b`; source commit `923b19223848999cad87924fac69ed61d22bb6c8`; SHA-256 `583df13cb342ceefbbf90c63108d185d3c261f38e67fcaa76549ef21b539fdb5`. `gen_getContractCode` returned 20,159 bytes and matched the local source byte-for-byte; the deployment finalized with GenVM `SUCCESS`.
+## HISTORICAL DEPLOYMENTS
 
-Observed live evidence: submission `0xb5725bcccfd947afcc26e51b15b072cb062c8d18a73f8887bae972ef6bcbfec5`; semantic review `0xb4f4010fb7cffe37c950a88b89d9b217aec6ad75151ae673f2d9d2e329144f2b`, finalized `inconclusive`. Explorer source retrieval/parity and the remaining outcome paths must be recorded separately; no unverified result is presented as approval or dispute.
+The earlier hardened deployment `0x8Bdf378985B6C11c1D39Fc7306aea568268b5851` and its transaction `0x314a60e8c53e40d24b92df431114cbdc9af7ae9bd9185b9b855ed89deebf5c3b` remain historical. Its source hash was `583df13cb342ceefbbf90c63108d185d3c261f38e67fcaa76549ef21b539fdb5`.
 
-Parity was verified through `gen_getContractCode`: retrieved and local byte lengths are both 19,281 and both SHA-256 values are `6a027aaa3c17511d76b4920bc952681e52d784b04c2c2d348b36481a38cc75cd`; byte comparison returned true. A second live review finalized `verified` for `live-verified-001` (transaction `0x890cff0b9be0adfc33440720cff8a1c37d63cdc76e45882a6a426aff86d370bf`). A separate claim finalized `disputed` (review transaction `0xe4a13122f8eb72aba0b02f522d23b2d3b4475670d98bcdc7c59dc9e44437c503`); settlement transaction `0xaf657ebe49073a58b1127482c61d2b6e251263f583bba979080091c33870f743` finalized successfully. The verified claim's challenge window remains time-gated; challenge and timeout flows require waiting for their protocol deadlines and an eligible challenger signer.
+## LIVE EVIDENCE
+
+Finalized evidence includes verified review `0x890cff0b9be0adfc33440720cff8a1c37d63cdc76e45882a6a426aff86d370bf`, inconclusive review `0xb4f4010fb7cffe37c950a88b89d9b217aec6ad75151ae673f2d9d2e329144f2b`, disputed review `0xe4a13122f8eb72aba0b02f522d23b2d3b4475670d98bcdc7c59dc9e44437c503`, and successful disputed settlement `0xaf657ebe49073a58b1127482c61d2b6e251263f583bba979080091c33870f743`. Challenge admission on the historical hardened deployment finalized in transaction `0x0da20e75c0410145cb87bfbe0e9b273741b368590c5b8d437e746e455abfda94`; challenge re-review and timeout remain protocol-time-gated evidence paths.
+
+## CI NOTE
+
+The repository release gate runs lint, validation, and Direct Mode. Some clean environments may still be unable to start Direct Mode when `genlayer-test==0.29.2` requests the unavailable upstream `genvm-universal.tar.xz` v0.3.0-rc7 artifact (HTTP 404); this is an upstream artifact-resolution failure before contract assertions execute, not a SignalBond test failure.

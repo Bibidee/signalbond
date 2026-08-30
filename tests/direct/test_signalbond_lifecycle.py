@@ -77,6 +77,37 @@ def test_challenge_timeout_boundary(direct_vm, direct_deploy, direct_alice):
     warp_to(direct_vm, "2026-08-30T02:00:00Z"); c.settle_claim("s-1")
     s=c.get_signal("s-1"); assert s["settlement"] == "timeout_refunded" and s["escrow_held"] == "0" and s["challenge_bond_held"] == "0"
 
+def challenged_review(direct_vm, c, direct_alice, result):
+    direct_vm.value = 10**18
+    with direct_vm.prank(direct_alice): c.challenge_claim("s-1")
+    direct_vm.value = 0
+    assert c.get_signal("s-1")["status"] == "challenged"
+    with direct_vm.expect_revert("Challenge window remains open"): c.review_claim("s-1")
+    direct_vm.clear_mocks(); review_mock(direct_vm, result)
+    warp_to(direct_vm, "2026-08-30T01:00:00Z")
+    c.review_claim("s-1")
+
+def test_challenged_verified_slashes_bond_and_settles_once(direct_vm, direct_deploy, direct_alice):
+    c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
+    challenged_review(direct_vm, c, direct_alice, {"claim_supported":"yes","contradiction":"no","source_quality":"yes","confidence":95,"rationale":"still verified"})
+    s=c.get_signal("s-1"); assert s["status"] == "reviewed" and s["verdict"] == "verified"
+    assert s["challenge_bond_held"] == "0" and s["escrow_held"] == str(10**20) and s["settlement"] == "slashed"
+    with direct_vm.expect_revert("Signal cannot be challenged"): c.challenge_claim("s-1")
+    warp_to(direct_vm, "2026-08-30T02:00:00Z"); c.settle_claim("s-1")
+    s=c.get_signal("s-1"); assert s["status"] == "settled" and s["escrow_held"] == "0"
+    with direct_vm.expect_revert("Already settled"): c.settle_claim("s-1")
+
+@pytest.mark.parametrize("result,settlement", [
+    ({"claim_supported":"no","contradiction":"no","source_quality":"yes","confidence":90,"rationale":"disputed"}, "refunded"),
+    ({"claim_supported":"unclear","contradiction":"no","source_quality":"yes","confidence":60,"rationale":"unclear"}, "refunded"),
+])
+def test_challenged_nonverified_reviews_refund_bond_and_principal(direct_vm, direct_deploy, direct_alice, result, settlement):
+    c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
+    challenged_review(direct_vm, c, direct_alice, result)
+    s=c.get_signal("s-1"); assert s["status"] == "reviewed" and s["challenge_bond_held"] == "0" and s["settlement"] == settlement
+    c.settle_claim("s-1"); s=c.get_signal("s-1"); assert s["status"] == "settled" and s["escrow_held"] == "0" and s["challenge_bond_held"] == "0"
+    with direct_vm.expect_revert("Already settled"): c.settle_claim("s-1")
+
 def test_eligible_challenge_and_timeout_refunds_both_balances(direct_vm, direct_deploy, direct_alice):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
     direct_vm.value = 10**18
