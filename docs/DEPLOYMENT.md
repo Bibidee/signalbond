@@ -14,7 +14,11 @@ The previous v0.3 deployment `0xBFd8a850Eb490c9D4aA500b2610BF6ca122d6320` and tr
 
 The earlier hardened deployment `0x8Bdf378985B6C11c1D39Fc7306aea568268b5851` and its transaction `0x314a60e8c53e40d24b92df431114cbdc9af7ae9bd9185b9b855ed89deebf5c3b` remain historical. Its source hash was `583df13cb342ceefbbf90c63108d185d3c261f38e67fcaa76549ef21b539fdb5`.
 
-## LIVE EVIDENCE
+## CURRENT LIVE CHALLENGE EVIDENCE
+
+Signal `live-challenge-final-001` on `0x96C19E1D08Acb1Ba3275C82e3783Cd1060Af88Bf`: submit `0xd328310efc6ba81290a8a56621df3d6e00d0331692785ada11c178780cf8d9d8`, verified review `0x6976c7a812829abb7139e614fad8deecdc0166544c7d9ef00a4524b1649e609c`, successful challenge `0xd732f4fde0e70ae0c231f8e3954c0ea5ceb43c6f9461e89e2c444b00ee8ad327`. Final state `challenged`; bond required/held `0.01 GEN`; escrow held `1 GEN`; opening ends `2026-08-30T22:54:14Z`; re-review deadline `2026-08-30T23:54:14Z`.
+
+## HISTORICAL LIVE EVIDENCE
 
 Fresh final-deployment claim `live-challenge-final-001`: submit `0xd328310efc6ba81290a8a56621df3d6e00d0331692785ada11c178780cf8d9d8`, verified review `0x6976c7a812829abb7139e614fad8deecdc0166544c7d9ef00a4524b1649e609c`, challenge `0xd732f4fde0e70ae0c231f8e3954c0ea5ceb43c6f9461e89e2c444b00ee8ad327`. All finalized with GenVM SUCCESS; state is `challenged`, bond required/held `10000000000000000`, escrow held `1000000000000000000`. Opening ends `2026-08-30T22:54:14Z`; re-review deadline `2026-08-30T23:54:14Z`.
 
@@ -26,6 +30,10 @@ Finalized evidence includes verified review `0x890cff0b9be0adfc33440720cff8a1c37
 
 Latest current-deployment population: verified review `0x384978d08d1e0c7b56845a1150009b391b64655bfde46678d987e82b56ad738e`; disputed review `0x6e0adaaa0c668ad10b09eb2d7a6bfe90db49568fd1ebfa312d63410659bcf621` and settlement `0x35eed0319864c2bee0dfa0414447069e57a2b4d8cacad07ea29941f62a8abba5`; inconclusive review `0x2d7d3c60f38276a681805565b6f173791d2abc779b58a4044db93214e08604a5` and settlement/refund `0xd9d37799ff1bd6ae103a97ddb631ec42cf8720e0f786c6a073c990bd253712cc`. All listed transactions finalized; settlement clears the held escrow. No current-deployment challenge transaction is claimed by this record.
 
+## HISTORICAL LIVE EVIDENCE
+
+The older verdict population below belongs to superseded deployments and is historical only.
+
 ## CI NOTE
 
-The release gate pins the official GenLayer testing-suite commit `8f8e802350140239be2b37590ed7a68253634ec5` (fix #81). This preserves the published `genlayer-test` 0.29.2 API while resolving the current `genvm-runners-all.tar.xz` bundle name, with fallback compatibility for older releases. Direct Mode, lint, and validation all pass locally with this toolchain. Hosted run [33323447134](https://github.com/Bibidee/signalbond/actions/runs/33323447134) completed successfully.
+The release gate pins the official GenLayer testing-suite commit `8f8e802350140239be2b37590ed7a68253634ec5` (fix #81). Direct Mode (79 passed), lint, validation/schema, and preflight pass. Hosted run [33337988307](https://github.com/Bibidee/signalbond/actions/runs/33337988307) completed successfully for exact head `2c538b2`.
