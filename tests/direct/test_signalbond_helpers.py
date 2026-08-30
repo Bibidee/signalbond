@@ -1,5 +1,6 @@
 import hashlib
 import sys
+import pytest
 
 def module_for(direct_deploy):
     contract = direct_deploy("contracts/signalbond.py")
@@ -47,8 +48,39 @@ def test_rationale_requires_string_and_transient_errors_group(direct_deploy):
 
 def test_private_and_userinfo_urls_rejected(direct_deploy):
     mod = module_for(direct_deploy)
-    for value in ("https://127.0.0.1/x", "https://user@127.0.0.1/x", "https://localhost/x", "https://10.0.0.1/x", "https://192.168.1.1/x", "https://172.16.0.1/x", "https://169.254.1.1/x", "https://[::1]/x"):
+    for value in ("https://127.0.0.1/x", "https://user@127.0.0.1/x", "https://localhost/x", "https://10.0.0.1/x", "https://192.168.1.1/x", "https://172.16.0.1/x", "https://169.254.1.1/x", "https://[::1]/x", "https://[fc00::1]/x", "https://[fd00::1]/x", "https://[fe80::1]/x"):
         try: mod.valid_url(value)
         except Exception: continue
         assert False, value
     assert mod.valid_url("https://example.com/evidence") == "https://example.com/evidence"
+    assert mod.valid_url("https://fcdomain.example/x") == "https://fcdomain.example/x"
+    assert mod.valid_url("https://fdexample.com/x") == "https://fdexample.com/x"
+
+def test_model_boundaries_and_extra_fields(direct_deploy):
+    mod = module_for(direct_deploy)
+    base = {"claim_supported":"yes","contradiction":"no","source_quality":"yes","confidence":75,"rationale":"ok"}
+    assert mod.verdict(base) == mod.VERIFIED
+    assert mod.verdict({**base, "confidence": 74}) == mod.INCONCLUSIVE
+    assert mod.verdict({**base, "confidence": 100, "extra": "ignored"}) == mod.VERIFIED
+    assert not mod.valid_analysis({**base, "confidence": True})
+    assert not mod.valid_analysis({**base, "rationale": ""})
+    assert not mod.valid_analysis({**base, "rationale": 4})
+
+@pytest.mark.parametrize("status", [404, 408, 425, 429, 500])
+def test_http_failure_classes_fail_closed(direct_vm, direct_deploy, status):
+    mod = module_for(direct_deploy)
+    url = "https://example.com/status"
+    body = b"body"
+    direct_vm.mock_web(url, {"status": status, "body": body})
+    with pytest.raises(ValueError):
+        mod.fetch_verified(url, "0x" + hashlib.sha256(body).hexdigest())
+
+def test_empty_and_invalid_utf8_fail_closed(direct_vm, direct_deploy):
+    mod = module_for(direct_deploy)
+    empty = "https://example.com/empty"
+    direct_vm.mock_web(empty, {"status": 200, "body": b""})
+    with pytest.raises(ValueError, match="empty_response"): mod.fetch_verified(empty, "0x" + "0" * 64)
+    bad = b"\xff\xfe"
+    invalid = "https://example.com/invalid"
+    direct_vm.mock_web(invalid, {"status": 200, "body": bad})
+    with pytest.raises(ValueError, match="invalid_utf8"): mod.fetch_verified(invalid, "0x" + hashlib.sha256(bad).hexdigest())

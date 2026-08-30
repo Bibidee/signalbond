@@ -71,3 +71,26 @@ def test_interested_parties_cannot_challenge(direct_vm, direct_deploy):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1"); direct_vm.value=10**18
     with direct_vm.expect_revert("Interested party"): c.challenge_claim("s-1")
     direct_vm.value=0
+
+def test_counterevidence_url_is_in_semantic_prompt(direct_vm, direct_deploy, direct_alice):
+    c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
+    counter_url = "https://example.com/counter-evidence"
+    counter = b"Counterevidence is stable.\n"
+    counter_hash = "0x" + hashlib.sha256(counter).hexdigest()
+    direct_vm.mock_web(counter_url, {"status": 200, "body": counter})
+    direct_vm.value = 10**18
+    with direct_vm.prank(direct_alice): c.challenge_claim("s-1", counter_url, counter_hash, "Counter summary")
+    direct_vm.value = 0
+    direct_vm.clear_mocks()
+    direct_vm.mock_web(EVIDENCE_URL, {"status": 200, "body": EVIDENCE})
+    direct_vm.mock_llm("<COUNTEREVIDENCE_URL>\n" + counter_url, json.dumps({"claim_supported":"no","contradiction":"yes","source_quality":"yes","confidence":90,"rationale":"counter"}))
+    warp_to(direct_vm, "2026-08-30T01:30:00Z")
+    c.review_claim("s-1")
+    assert c.get_signal("s-1")["verdict"] == "disputed"
+
+def test_challenge_bond_exact_value_required(direct_vm, direct_deploy, direct_alice):
+    c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
+    direct_vm.value = 1
+    with direct_vm.prank(direct_alice):
+        with direct_vm.expect_revert("Exact challenge bond required"): c.challenge_claim("s-1")
+    direct_vm.value = 0
