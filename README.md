@@ -6,4 +6,10 @@ An eligible third party can open one bounded challenge round with the exact requ
 
 The contract is deliberately frontend- and oracle-independent. External artifacts must be HTTPS, bounded, UTF-8 text and content-addressed by SHA-256(raw bytes). Direct Mode tests cover malformed inputs, integrity failures, consensus disagreement, challenge timing, replay protection, and bond accounting.
 
-Version 0.2.0 stores each signal's challenge window, expires pending reviews after 48 hours, and refunds both principal and bond on challenge timeout. There is no claimed live deployment yet; deployment evidence will be added only after finalized transactions and byte-for-byte source parity are verified.
+Version 0.2.0 stores each signal's challenge window, expires pending reviews after 48 hours, and refunds both principal and bond on challenge timeout.
+
+## Deployment evidence
+
+The v0.2.0 source was deployed and finalized on StudioNet at [0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C](https://explorer-studio.genlayer.com/address/0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C). Deployment transaction: [0x1fd01b31d6a0a2bebb92c29f13f4a888ef62adfee7546a7f0e12c91dc9d2a6e6](https://explorer-studio.genlayer.com/tx/0x1fd01b31d6a0a2bebb92c29f13f4a888ef62adfee7546a7f0e12c91dc9d2a6e6). The finalized receipt reports GenVM `SUCCESS`. Local source SHA-256 is `6a027aaa3c17511d76b4920bc952681e52d784b04c2c2d348b36481a38cc75cd`.
+
+Live submission transaction: [0xb5725bcccfd947afcc26e51b15b072cb062c8d18a73f8887bae972ef6bcbfec5](https://explorer-studio.genlayer.com/tx/0xb5725bcccfd947afcc26e51b15b072cb062c8d18a73f8887bae972ef6bcbfec5). Live semantic review transaction: [0xb4f4010fb7cffe37c950a88b89d9b217aec6ad75151ae673f2d9d2e329144f2b](https://explorer-studio.genlayer.com/tx/0xb4f4010fb7cffe37c950a88b89d9b217aec6ad75151ae673f2d9d2e329144f2b), finalized with `inconclusive` (confidence 62/source quality unclear). No live approval, dispute, challenge, or timeout result is claimed yet.
