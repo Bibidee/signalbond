@@ -6,7 +6,7 @@ SignalBond v0.2.0 is deployed on StudioNet at `0xc343CEE693AaA8d35493e1D39BA3778
 
 The deployed source corresponds to contract-source commit `c82900f` and SHA-256 `291ac6438a3dea71778438a4410bdb4942631d660ccada079f69c45088490e0a`. `gen_getContractCode` returned 20,382 bytes; local and deployed bytes match exactly.
 
-Direct Mode currently reports 58 passed. Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from the repository root. Preflight enforces AST parsing, GenVM lint, contract validation/schema, and the complete Direct Mode suite.
+Direct Mode currently reports 74 passed. Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from the repository root. Preflight enforces AST parsing, GenVM lint, contract validation/schema, and the complete Direct Mode suite.
 
 ## HISTORICAL DEPLOYMENTS
 

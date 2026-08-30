@@ -142,3 +142,53 @@ def test_challenge_bond_exact_value_required(direct_vm, direct_deploy, direct_al
     with direct_vm.prank(direct_alice):
         with direct_vm.expect_revert("Exact challenge bond required"): c.challenge_claim("s-1")
     direct_vm.value = 0
+
+@pytest.mark.parametrize("value", [0, BOND - 1, BOND + 1, BOND * 2])
+def test_challenge_bond_rejected_values_are_atomic(direct_vm, direct_deploy, direct_alice, value):
+    c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
+    direct_vm.value = value
+    with direct_vm.prank(direct_alice):
+        with direct_vm.expect_revert("Exact challenge bond required"): c.challenge_claim("s-1")
+    direct_vm.value = 0
+    s=c.get_signal("s-1")
+    assert s["status"] == "reviewed" and s["verdict"] == "verified" and s["challenge_bond_held"] == "0"
+    assert s["challenge_artifact_url"] == "" and s["escrow_held"] == str(10**20)
+
+@pytest.mark.parametrize("sender", ["submitter", "beneficiary", "owner", "sink"])
+def test_each_interested_party_is_rejected_without_state_change(direct_vm, direct_deploy, direct_alice, sender):
+    c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
+    sink = bytes.fromhex("00" * 18 + "dead")
+    addresses = {"submitter": direct_owner_placeholder(direct_vm), "beneficiary": BENEFICIARY, "owner": direct_owner_placeholder(direct_vm), "sink": sink}
+    direct_vm.value = BOND
+    with direct_vm.prank(addresses[sender]):
+        with direct_vm.expect_revert("Interested party"): c.challenge_claim("s-1")
+    direct_vm.value = 0
+    s=c.get_signal("s-1"); assert s["status"] == "reviewed" and s["verdict"] == "verified" and s["challenge_bond_held"] == "0"
+
+def direct_owner_placeholder(direct_vm):
+    return direct_vm.sender
+
+def test_unrelated_party_challenge_accepts_exact_bond(direct_vm, direct_deploy, direct_alice):
+    c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
+    direct_vm.value=BOND
+    with direct_vm.prank(direct_alice): c.challenge_claim("s-1")
+    direct_vm.value=0
+    assert c.get_signal("s-1")["status"] == "challenged"
+
+@pytest.mark.parametrize("url,artifact_hash,summary,status,body", [
+    ("https://example.com/counter", "0x" + "0" * 64, "summary", 200, b"counter"),
+    ("https://example.com/counter", "0x" + "1" * 64, "summary", 404, b"counter"),
+    ("https://example.com/counter", "0x" + "1" * 64, "summary", 200, b""),
+    ("http://example.com/counter", "0x" + "1" * 64, "summary", 200, b"counter"),
+    ("https://localhost/counter", "0x" + "1" * 64, "summary", 200, b"counter"),
+    ("https://127.0.0.1/counter", "0x" + "1" * 64, "summary", 200, b"counter"),
+    ("https://[::1]/counter", "0x" + "1" * 64, "summary", 200, b"counter"),
+])
+def test_failed_counterevidence_admission_is_atomic(direct_vm, direct_deploy, direct_alice, url, artifact_hash, summary, status, body):
+    c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
+    direct_vm.mock_web(url, {"status": status, "body": body})
+    direct_vm.value=BOND
+    with direct_vm.prank(direct_alice):
+        with direct_vm.expect_revert(): c.challenge_claim("s-1", url, artifact_hash, summary)
+    direct_vm.value=0
+    s=c.get_signal("s-1"); assert s["status"] == "reviewed" and s["verdict"] == "verified" and s["challenge_bond_held"] == "0" and s["challenge_artifact_url"] == ""
