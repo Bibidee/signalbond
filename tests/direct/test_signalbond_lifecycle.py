@@ -6,6 +6,9 @@ from conftest import warp_to
 EVIDENCE_URL = "https://example.com/signal-evidence"
 EVIDENCE = b"The signal evidence is stable.\n"
 EVIDENCE_HASH = "0x" + hashlib.sha256(EVIDENCE).hexdigest()
+COUNTER_URL = "https://example.com/counter-default"
+COUNTER = b"Independent counterevidence.\n"
+COUNTER_HASH = "0x" + hashlib.sha256(COUNTER).hexdigest()
 BENEFICIARY = bytes.fromhex("22" * 20)
 BOND = 10**18
 
@@ -24,12 +27,18 @@ def review_mock(direct_vm, result=None):
     direct_vm.mock_web(EVIDENCE_URL, {"status": 200, "body": EVIDENCE})
     direct_vm.mock_llm("You independently verify", json.dumps(result))
 
+def open_challenge(direct_vm, c, direct_alice):
+    direct_vm.mock_web(COUNTER_URL, {"status": 200, "body": COUNTER})
+    direct_vm.value = BOND
+    with direct_vm.prank(direct_alice): c.challenge_claim("s-1", COUNTER_URL, COUNTER_HASH, "counter")
+    direct_vm.value = 0
+
 def test_submission_and_info(direct_vm, direct_deploy):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c)
     s = c.get_signal("s-1")
     assert s["status"] == "pending" and s["escrow_held"] == str(10**20)
     assert s["challenge_window"] == "3600" and int(s["review_deadline"]) > int(s["submitted_at"])
-    assert c.get_info()["version"] == "0.2.0"
+    assert c.get_info()["version"] == "0.3.0"
 
 def test_duplicate_and_invalid_submission_rejected(direct_vm, direct_deploy):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c)
@@ -70,17 +79,13 @@ def test_pending_expiry_boundaries(direct_vm, direct_deploy, when, allowed):
 
 def test_challenge_timeout_boundary(direct_vm, direct_deploy, direct_alice):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
-    direct_vm.value=10**18
-    with direct_vm.prank(direct_alice): c.challenge_claim("s-1")
-    direct_vm.value=0; warp_to(direct_vm, "2026-08-30T01:59:59Z")
+    open_challenge(direct_vm, c, direct_alice); warp_to(direct_vm, "2026-08-30T01:59:59Z")
     with direct_vm.expect_revert("deadline remains open"): c.settle_claim("s-1")
     warp_to(direct_vm, "2026-08-30T02:00:00Z"); c.settle_claim("s-1")
     s=c.get_signal("s-1"); assert s["settlement"] == "timeout_refunded" and s["escrow_held"] == "0" and s["challenge_bond_held"] == "0"
 
 def challenged_review(direct_vm, c, direct_alice, result):
-    direct_vm.value = 10**18
-    with direct_vm.prank(direct_alice): c.challenge_claim("s-1")
-    direct_vm.value = 0
+    open_challenge(direct_vm, c, direct_alice)
     assert c.get_signal("s-1")["status"] == "challenged"
     with direct_vm.expect_revert("Challenge window remains open"): c.review_claim("s-1")
     direct_vm.clear_mocks(); review_mock(direct_vm, result)
@@ -110,9 +115,7 @@ def test_challenged_nonverified_reviews_refund_bond_and_principal(direct_vm, dir
 
 def test_eligible_challenge_and_timeout_refunds_both_balances(direct_vm, direct_deploy, direct_alice):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
-    direct_vm.value = 10**18
-    with direct_vm.prank(direct_alice): c.challenge_claim("s-1")
-    direct_vm.value = 0; s=c.get_signal("s-1"); assert s["status"] == "challenged" and s["challenge_bond_held"] == str(10**18)
+    open_challenge(direct_vm, c, direct_alice); s=c.get_signal("s-1"); assert s["status"] == "challenged" and s["challenge_bond_held"] == str(10**18)
     warp_to(direct_vm, "2026-08-30T02:00:00Z"); c.settle_claim("s-1"); s=c.get_signal("s-1"); assert s["status"] == "settled" and s["escrow_held"] == "0" and s["challenge_bond_held"] == "0"
 
 def test_interested_parties_cannot_challenge(direct_vm, direct_deploy):
@@ -170,9 +173,7 @@ def direct_owner_placeholder(direct_vm):
 
 def test_unrelated_party_challenge_accepts_exact_bond(direct_vm, direct_deploy, direct_alice):
     c = deploy(direct_vm, direct_deploy); submit(direct_vm, c); review_mock(direct_vm); c.review_claim("s-1")
-    direct_vm.value=BOND
-    with direct_vm.prank(direct_alice): c.challenge_claim("s-1")
-    direct_vm.value=0
+    open_challenge(direct_vm, c, direct_alice)
     assert c.get_signal("s-1")["status"] == "challenged"
 
 @pytest.mark.parametrize("url,artifact_hash,summary,status,body", [

@@ -73,7 +73,7 @@ def test_model_boundaries_and_extra_fields(direct_deploy):
     base = {"claim_supported":"yes","contradiction":"no","source_quality":"yes","confidence":75,"rationale":"ok"}
     assert mod.verdict(base) == mod.VERIFIED
     assert mod.verdict({**base, "confidence": 74}) == mod.INCONCLUSIVE
-    assert mod.verdict({**base, "confidence": 100, "extra": "ignored"}) == mod.VERIFIED
+    assert not mod.valid_analysis({**base, "confidence": 100, "extra": "ignored"})
     assert not mod.valid_analysis({**base, "confidence": True})
     assert not mod.valid_analysis({**base, "rationale": ""})
     assert not mod.valid_analysis({**base, "rationale": 4})

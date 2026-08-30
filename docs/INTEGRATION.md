@@ -1,0 +1,3 @@
+# Integration
+
+Deploy `SignalBond(owner_address, challenge_sink_address, challenge_bps, min_challenge_bond)`. Submit with `submit_claim(id, beneficiary, statement, evidence_url, evidence_sha256, challenge_window)` and positive escrow. Evidence URLs must be HTTPS and the hash is SHA-256 of exact raw bytes. Call `review_claim(id)` after submission. Read `get_signal(id)`, `get_info()`, and `get_policy()`; only `verified` becomes payable after its challenge window. Disputed and inconclusive signals settle to the submitter. Challenges require an eligible unrelated address, exact `challenge_bond_required`, counterevidence URL/hash, and optional summary. Terminal settlement is one-time; unavailable evidence and malformed model output are retryable and never approve.

@@ -4,19 +4,19 @@ Fresh hardened live challenge evidence: transaction `0x0da20e75c0410145cb87bfbe0
 
 SignalBond is a reusable GenLayer Intelligent Contract primitive for escrowed public claims. A submitter commits a statement and the SHA-256 digest of immutable evidence, deposits escrow, and requests independent semantic review. Validators fetch the exact bytes, verify the commitment before interpretation, and compare the deterministic derived verdict rather than rationale text. Verified claims become payable only after the challenge window; disputed or inconclusive claims return escrow to the submitter.
 
-An eligible third party can open one bounded challenge round with the exact required bond and optional hash-bound counterevidence. While challenged, the claim is never actionable. Re-review can slash the bond to the configured sink when verification remains confirmed, or refund it when the result is not verified. If review is unavailable, a public timeout route refunds the bond. All payouts zero internal accounting before transfer and settlement is one-time.
+An eligible third party can open one bounded challenge round with the exact required bond and mandatory hash-bound counterevidence. While challenged, the claim is never actionable. Re-review can slash the bond to the configured sink when verification remains confirmed, or refund it when the result is not verified. If review is unavailable, a public timeout route refunds the bond. All payouts zero internal accounting before transfer and settlement is one-time.
 
 The contract is deliberately frontend- and oracle-independent. External artifacts must be HTTPS, bounded, UTF-8 text and content-addressed by SHA-256(raw bytes). Direct Mode: 74 passed, covering state transitions, verdict/equivalence logic, evidence integrity, malformed semantic outputs, challenge admission, timing boundaries, replay protection, bond accounting, and URL hardening. StudioNet deployments exercise multi-validator consensus; Direct Mode does not claim forced validator disagreement.
 
 GitHub Actions release gate: [run 33323447134](https://github.com/Bibidee/signalbond/actions/runs/33323447134) completed successfully on the current release commit using the official GenLayer testing-suite fix pinned at commit `8f8e802350140239be2b37590ed7a68253634ec5`.
 
-Version 0.2.0 stores each signal's challenge window, expires pending reviews after 48 hours, and refunds both principal and bond on challenge timeout.
+The working source is version 0.3.0. It stores each signal's challenge window, expires pending reviews after 48 hours, requires hash-bound counterevidence for challenges, and refunds both principal and bond on challenge timeout.
 
 ## Deployment evidence
 
 Current source deployment: [0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc](https://explorer-studio.genlayer.com/address/0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc), transaction [0xc56ebfe18d89a7b54be8b9129892e997e40066a8a0c2f53162af9bf30215dc6d](https://explorer-studio.genlayer.com/tx/0xc56ebfe18d89a7b54be8b9129892e997e40066a8a0c2f53162af9bf30215dc6d). It finalized with GenVM `SUCCESS`; deployed and local source are byte-identical at 20,382 bytes, with SHA-256 `291ac6438a3dea71778438a4410bdb4942631d660ccada079f69c45088490e0a`.
 
-The v0.2.0 source was deployed and finalized on StudioNet at [0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C](https://explorer-studio.genlayer.com/address/0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C). Deployment transaction: [0x1fd01b31d6a0a2bebb92c29f13f4a888ef62adfee7546a7f0e12c91dc9d2a6e6](https://explorer-studio.genlayer.com/tx/0x1fd01b31d6a0a2bebb92c29f13f4a888ef62adfee7546a7f0e12c91dc9d2a6e6). The finalized receipt reports GenVM `SUCCESS`. Local source SHA-256 is `6a027aaa3c17511d76b4920bc952681e52d784b04c2c2d348b36481a38cc75cd`.
+The previously deployed v0.2.0 source remains historical at [0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C](https://explorer-studio.genlayer.com/address/0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C). The v0.3.0 source has not been deployed.
 
 Historical hardened deployment: [0x8Bdf378985B6C11c1D39Fc7306aea568268b5851](https://explorer-studio.genlayer.com/address/0x8Bdf378985B6C11c1D39Fc7306aea568268b5851), transaction [0x314a60e8c53e40d24b92df431114cbdc9af7ae9bd9185b9b855ed89deebf5c3b](https://explorer-studio.genlayer.com/tx/0x314a60e8c53e40d24b92df431114cbdc9af7ae9bd9185b9b855ed89deebf5c3b), source SHA-256 `583df13cb342ceefbbf90c63108d185d3c261f38e67fcaa76549ef21b539fdb5`.
 
