@@ -1,5 +1,7 @@
 # Deployment
 
+Fresh hardened challenge transaction `0x0da20e75c0410145cb87bfbe0e9b273741b368590c5b8d437e746e455abfda94` finalized; challenger `0x53C89d18C2951C4df149d08217f5b5E2Cf1A51C0`; signal is `challenged`; opening deadline `1788095847`; review deadline `1788099447`.
+
 Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from this directory. The deployable source is `contracts/signalbond.py`; record finalized deployment, commit, and SHA-256 of its raw bytes, then retrieve Explorer source and compare byte-for-byte. Run safe, disputed, inconclusive, pending-expiry, challenge, and timeout paths only after deployment finality. No live deployment is claimed by this package yet.
 
 Current finalized deployment: `0xF7564AD30F2e1384a9DbC7860e484a15C6B6a96C`; deployment transaction `0x1fd01b31d6a0a2bebb92c29f13f4a888ef62adfee7546a7f0e12c91dc9d2a6e6`; source commit `790c080684697f2226ae5422d89fa19bb4766161`; local source SHA-256 `6a027aaa3c17511d76b4920bc952681e52d784b04c2c2d348b36481a38cc75cd`. The receipt finalized with GenVM `SUCCESS`.

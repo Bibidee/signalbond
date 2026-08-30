@@ -1,5 +1,7 @@
 # SignalBond
 
+Fresh hardened live challenge evidence: transaction `0x0da20e75c0410145cb87bfbe0e9b273741b368590c5b8d437e746e455abfda94` finalized and `current-safe-001` reads `challenged` with the exact bond held. Opening deadline is Unix `1788095847`; review deadline is Unix `1788099447`.
+
 SignalBond is a reusable GenLayer Intelligent Contract primitive for escrowed public claims. A submitter commits a statement and the SHA-256 digest of immutable evidence, deposits escrow, and requests independent semantic review. Validators fetch the exact bytes, verify the commitment before interpretation, and compare the deterministic derived verdict rather than rationale text. Verified claims become payable only after the challenge window; disputed or inconclusive claims return escrow to the submitter.
 
 An eligible third party can open one bounded challenge round with the exact required bond and optional hash-bound counterevidence. While challenged, the claim is never actionable. Re-review can slash the bond to the configured sink when verification remains confirmed, or refund it when the result is not verified. If review is unavailable, a public timeout route refunds the bond. All payouts zero internal accounting before transfer and settlement is one-time.
