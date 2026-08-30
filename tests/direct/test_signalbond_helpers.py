@@ -36,3 +36,19 @@ def test_hash_normalization_is_canonical(direct_deploy):
     mod = module_for(direct_deploy)
     digest = "a" * 64
     assert mod.canonical_hash("0x" + digest) == "0x" + digest
+
+def test_rationale_requires_string_and_transient_errors_group(direct_deploy):
+    mod = module_for(direct_deploy)
+    base = {"claim_supported":"yes","contradiction":"no","source_quality":"yes","confidence":75,"rationale":"ok"}
+    bad = dict(base); bad["rationale"] = {"text":"ok"}
+    assert not mod.valid_analysis(bad)
+    assert mod.error_equivalent("fetch_unavailable", "http_unavailable")
+    assert not mod.error_equivalent("hash_mismatch", "http_unavailable")
+
+def test_private_and_userinfo_urls_rejected(direct_deploy):
+    mod = module_for(direct_deploy)
+    for value in ("https://127.0.0.1/x", "https://user@127.0.0.1/x", "https://localhost/x", "https://10.0.0.1/x", "https://192.168.1.1/x", "https://172.16.0.1/x", "https://169.254.1.1/x", "https://[::1]/x"):
+        try: mod.valid_url(value)
+        except Exception: continue
+        assert False, value
+    assert mod.valid_url("https://example.com/evidence") == "https://example.com/evidence"
