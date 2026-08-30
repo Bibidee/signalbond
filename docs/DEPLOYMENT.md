@@ -1,5 +1,7 @@
 # Deployment
 
+Current source deployment: `0xc343CEE693AaA8d35493e1D39BA3778CB78138Cc`; transaction `0xc56ebfe18d89a7b54be8b9129892e997e40066a8a0c2f53162af9bf30215dc6d`. It finalized with GenVM `SUCCESS`. Local and deployed source are byte-identical (20,382 bytes), with SHA-256 `291ac6438a3dea71778438a4410bdb4942631d660ccada079f69c45088490e0a`.
+
 Fresh hardened challenge transaction `0x0da20e75c0410145cb87bfbe0e9b273741b368590c5b8d437e746e455abfda94` finalized; challenger `0x53C89d18C2951C4df149d08217f5b5E2Cf1A51C0`; signal is `challenged`; opening deadline `1788095847`; review deadline `1788099447`.
 
 Run `python scripts/preflight.py` and `python -m pytest tests/direct -q` from this directory. The deployable source is `contracts/signalbond.py`; record finalized deployment, commit, and SHA-256 of its raw bytes, then retrieve Explorer source and compare byte-for-byte. Direct Mode currently reports 29 passed. The hardened deployment below is finalized; post-deployment working-tree changes require a new deployment before replacing it as active.
