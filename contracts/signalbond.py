@@ -318,6 +318,8 @@ class SignalBond(gl.Contract):
     @gl.public.write
     def settle_claim(self, signal_id: str) -> None:
         signal = self._signal(signal_id)
+        if signal.status == SETTLED or signal.settlement in ("paid", "timeout_refunded", "expired_refunded"):
+            raise gl.vm.UserError(f"{EXPECTED} Already settled")
         if signal.status == CHALLENGED:
             if timestamp() < int(signal.challenge_review_deadline): raise gl.vm.UserError(f"{EXPECTED} Challenge review deadline remains open")
             bond = signal.challenge_bond_held; principal = signal.escrow_held
@@ -338,7 +340,7 @@ class SignalBond(gl.Contract):
     @gl.public.view
     def get_signal(self, signal_id: str) -> dict:
         signal = self._signal(signal_id)
-        return {"id": signal.id, "submitter": signal.submitter.as_hex, "beneficiary": signal.beneficiary.as_hex, "statement": signal.statement, "evidence_url": signal.evidence_url, "evidence_hash": signal.evidence_hash, "status": signal.status, "verdict": signal.verdict, "confidence": str(signal.confidence), "rationale": signal.rationale, "submitted_at": str(signal.submitted_at), "review_deadline": str(signal.review_deadline), "challenge_window": str(signal.challenge_window), "challenge_bond_held": str(signal.challenge_bond_held), "challenge_bond_required": str(signal.challenge_bond_required), "challenge_open_until": str(signal.challenge_open_until), "challenge_review_deadline": str(signal.challenge_review_deadline), "challenge_artifact_url": signal.challenge_artifact_url, "challenge_artifact_hash": signal.challenge_artifact_hash, "challenge_artifact_text": signal.challenge_artifact_text, "settlement": signal.settlement}
+        return {"id": signal.id, "submitter": signal.submitter.as_hex, "beneficiary": signal.beneficiary.as_hex, "statement": signal.statement, "evidence_url": signal.evidence_url, "evidence_hash": signal.evidence_hash, "status": signal.status, "verdict": signal.verdict, "confidence": str(signal.confidence), "rationale": signal.rationale, "submitted_at": str(signal.submitted_at), "review_deadline": str(signal.review_deadline), "challenge_window": str(signal.challenge_window), "challenge_bond_held": str(signal.challenge_bond_held), "challenge_bond_required": str(signal.challenge_bond_required), "challenge_open_until": str(signal.challenge_open_until), "challenge_review_deadline": str(signal.challenge_review_deadline), "challenge_artifact_url": signal.challenge_artifact_url, "challenge_artifact_hash": signal.challenge_artifact_hash, "challenge_artifact_text": signal.challenge_artifact_text, "escrow_held": str(signal.escrow_held), "settlement": signal.settlement}
 
     @gl.public.view
     def get_info(self) -> dict:
