@@ -18,4 +18,4 @@ Finalized evidence includes verified review `0x890cff0b9be0adfc33440720cff8a1c37
 
 ## CI NOTE
 
-The release gate pins the official GenLayer testing-suite commit `8f8e802350140239be2b37590ed7a68253634ec5` (fix #81). This preserves the published `genlayer-test` 0.29.2 API while resolving the current `genvm-runners-all.tar.xz` bundle name, with fallback compatibility for older releases. Direct Mode, lint, and validation all pass locally with this toolchain. Hosted run [33321649926](https://github.com/Bibidee/signalbond/actions/runs/33321649926) completed successfully.
+The release gate pins the official GenLayer testing-suite commit `8f8e802350140239be2b37590ed7a68253634ec5` (fix #81). This preserves the published `genlayer-test` 0.29.2 API while resolving the current `genvm-runners-all.tar.xz` bundle name, with fallback compatibility for older releases. Direct Mode, lint, and validation all pass locally with this toolchain. Hosted run [33322717412](https://github.com/Bibidee/signalbond/actions/runs/33322717412) completed successfully.
